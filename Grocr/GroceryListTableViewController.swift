@@ -124,9 +124,7 @@ class GroceryListTableViewController: UITableViewController {
 
     toggleCellCheckbox(cell, isCompleted: toggledCompletion)
     groceryItem.completed = toggledCompletion
-
-//    let values: [String: Any] = ["name": "Bacon"]
-//    groceryItem.ref?.updateChildValues(values)
+    groceryItem.ref?.updateChildValues(["completed" : toggledCompletion])
     
     tableView.reloadData()
   }
