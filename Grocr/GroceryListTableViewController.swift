@@ -96,8 +96,7 @@ class GroceryListTableViewController: UITableViewController {
     let groceryItem = items[indexPath.row]
     
     cell.textLabel?.text = groceryItem.name
-    cell.detailTextLabel?.text = groceryItem.addedByUser
-    
+    cell.detailTextLabel?.text = "added by: " + groceryItem.addedByUser + "  location: " + groceryItem.location
     toggleCellCheckbox(cell, isCompleted: groceryItem.completed)
     
     return cell
@@ -147,33 +146,40 @@ class GroceryListTableViewController: UITableViewController {
     let alert = UIAlertController(title: "Grocery Item",
                                   message: "Add an Item",
                                   preferredStyle: .alert)
-    
+    alert.addTextField {
+      (textField: UITextField!) -> Void in
+      textField.placeholder = "Food's Name"
+    }
+    alert.addTextField {
+      (textField: UITextField!) -> Void in
+      textField.placeholder = "Food's Location"
+    }
+    let foodName = alert.textFields!.first!
+    let foodLocation = alert.textFields!.last!
     let saveAction = UIAlertAction(title: "Save",
                                    style: .default) { action in
-      let textField = alert.textFields![0] 
-      let groceryItem = GroceryItem(name: textField.text!,
-                                    addedByUser: self.user.email,
-                                    completed: false)
-      self.items.append(groceryItem)
-      self.tableView.reloadData()
+                                    let textField = alert.textFields![0]
+                                    let groceryItem = GroceryItem(name: foodName.text!,
+                                                                  addedByUser: self.user.email,
+                                                                  location: foodLocation.text!,
+                                                                  completed: false)
+                                    self.items.append(groceryItem)
+                                    self.tableView.reloadData()
                                     
-      let groceryItemRef = self.groceryItemsReference.child(textField.text!.lowercased())
-      let values: [String: Any] = [ "name": textField.text!.lowercased(), "addedByUser": self.user.email, "completed": false]
-      groceryItemRef.setValue(values)
-      
-      
+                                    let groceryItemRef = self.groceryItemsReference.child(foodName.text ?? "Unknown")
+                                    let values : [String: Any] = ["name" : textField.text!.lowercased(), "addedByUser": self.user.email, "location": foodLocation.text, "completed": false]
+                                    groceryItemRef.setValue(values)
     }
     
     let cancelAction = UIAlertAction(title: "Cancel",
                                      style: .default)
-    
-    alert.addTextField()
     
     alert.addAction(saveAction)
     alert.addAction(cancelAction)
     
     present(alert, animated: true, completion: nil)
   }
+
   
   @objc func userCountButtonDidTouch() {
     performSegue(withIdentifier: listToUsers, sender: nil)
