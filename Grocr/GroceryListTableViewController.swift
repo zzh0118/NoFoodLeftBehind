@@ -1,25 +1,3 @@
-/*
- * Copyright (c) 2015 Razeware LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
 import UIKit
 import Firebase
 
@@ -48,7 +26,7 @@ class GroceryListTableViewController: UITableViewController {
     userCountBarButtonItem.tintColor = UIColor.white
     navigationItem.leftBarButtonItem = userCountBarButtonItem
     
-    user = User(uid: "FakeId", email: "hungry@person.food")
+    user = User(uid: "FakeId", email: "zzh@gwu.edu")
     groceryItemsReference.observe(.value, with: {
     snapshot in
       print(snapshot)
@@ -96,7 +74,7 @@ class GroceryListTableViewController: UITableViewController {
     let groceryItem = items[indexPath.row]
     
     cell.textLabel?.text = groceryItem.name
-    cell.detailTextLabel?.text = "added by: " + groceryItem.addedByUser + "  location: " + groceryItem.location
+    cell.detailTextLabel?.text = "added by: " + groceryItem.addedByUser + "       location: " + groceryItem.location
     toggleCellCheckbox(cell, isCompleted: groceryItem.completed)
     
     return cell
@@ -121,7 +99,7 @@ class GroceryListTableViewController: UITableViewController {
     var groceryItem = items[indexPath.row]
     let toggledCompletion = !groceryItem.completed
 
-    toggleCellCheckbox(cell, isCompleted: toggledCompletion)
+    toggleClicked(cell, isCompleted: toggledCompletion, name: groceryItem.name, location: groceryItem.location)
     groceryItem.completed = toggledCompletion
     groceryItem.ref?.updateChildValues(["completed" : toggledCompletion])
     
@@ -137,6 +115,31 @@ class GroceryListTableViewController: UITableViewController {
       cell.accessoryType = .checkmark
       cell.textLabel?.textColor = UIColor.gray
       cell.detailTextLabel?.textColor = UIColor.gray
+    }
+  }
+  
+  func toggleClicked(_ cell: UITableViewCell, isCompleted: Bool, name: String, location: String) {
+    if !isCompleted {
+      cell.accessoryType = .none
+      cell.textLabel?.textColor = UIColor.black
+      cell.detailTextLabel?.textColor = UIColor.black
+      let alert = UIAlertController(title: "Cancel a book", message: "You canceled your book \(name)", preferredStyle: .alert)
+      
+      let okAction = UIAlertAction(title: "OK", style: .default)
+      alert.addAction(okAction)
+      
+      present(alert, animated: true, completion: nil)
+      
+    } else {
+      cell.accessoryType = .checkmark
+      cell.textLabel?.textColor = UIColor.gray
+      cell.detailTextLabel?.textColor = UIColor.gray
+      let alert = UIAlertController(title: "Book a food", message: "You successfully booked \(name),  please go to \(location) to pick it up", preferredStyle: .alert)
+      
+      let okAction = UIAlertAction(title: "OK", style: .default)
+      alert.addAction(okAction)
+      
+      present(alert, animated: true, completion: nil)
     }
   }
   
