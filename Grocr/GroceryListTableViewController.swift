@@ -146,7 +146,7 @@ class GroceryListTableViewController: UITableViewController {
   // MARK: Add Item
   
   @IBAction func addButtonDidTouch(_ sender: AnyObject) {
-    let alert = UIAlertController(title: "Grocery Item",
+    let alert = UIAlertController(title: "Food Item",
                                   message: "Add an Item",
                                   preferredStyle: .alert)
     alert.addTextField {
